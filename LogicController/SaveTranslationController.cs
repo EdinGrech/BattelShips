@@ -6,9 +6,10 @@ namespace LogicController
 {
     public static class SaveTranslationController
     {
-        public static void ShipOnBoardPlacementSaver(ShipInfo shipinfo, BoardData boardData, int shipTypeId)
+        public static int ShipOnBoardPlacementSaver(ShipInfo shipinfo, BoardData boardData, int shipTypeId)
         {
             int savedShipId;
+            int savedBoardId;
 
             Ship createShipObject(ShipInfo shipinfo)
             {
@@ -25,41 +26,42 @@ namespace LogicController
             {
                 Board board = new Board
                 {
-                    id = boarddata.id,
                     PlayerFK = boarddata.PlayerID,
                     GameFK = boarddata.GameID,
                 };
                 return board;
             }
 
-            Board2Ship createBoard2ShipObject(BoardData boarddata, int savedShipId) {
+            Board2Ship createBoard2ShipObject(int boardId, int savedShipId) {
                 Board2Ship board2Ship = new Board2Ship
                 {
-                    BoardFK = boarddata.id,
+                    BoardFK = boardId,
                     ShipFK = savedShipId
                 };
                 return board2Ship;
             }
 
-            void saveBoard2Ship2DB(BoardData boarddata) { 
+            void saveBoard2Ship2DB() { 
                 //call only once ship has been saved and ship id is in hand
-                Board2ShipAccess.AddBoard2Ship(createBoard2ShipObject(boarddata, savedShipId));
+                Board2ShipAccess.AddBoard2Ship(createBoard2ShipObject(savedBoardId, savedShipId));
             }
 
             void saveShip2DB(ShipInfo shipinfo)
             {
-                savedShipId = ShipAccess.AddShip(createShipObject(shipinfo));
-                saveBoard2Ship2DB(boardData);
+                savedShipId = (int)(boardData.id != null ? boardData.id : ShipAccess.AddShip(createShipObject(shipinfo)));
+                savedBoardId = BoardAccess.AddBoard(createBoardObject(boardData));
+                saveBoard2Ship2DB();
             }
 
             saveShip2DB(shipinfo);
+            return savedBoardId;
         }
 
         public static void Attack2BoardSaver(DataAccess.Structures.StructHelpers.Attack attack, BoardData boardData)
         {
             DataAccess.Structures.DBStructures.Attack createAttackObject(DataAccess.Structures.StructHelpers.Attack attack)
             {
-                Board boardLink = BoardAccess.GetBoardById(boardData.id);
+                Board boardLink = BoardAccess.GetBoardById((int)(boardData.id));
 
                 DataAccess.Structures.DBStructures.Attack Attack = new DataAccess.Structures.DBStructures.Attack
                 {
@@ -76,7 +78,7 @@ namespace LogicController
             {
                 Board2Attack board2Attack = new Board2Attack
                 {
-                    BoardFK = boardData.id,
+                    BoardFK = (int)(boardData.id!),
                     AttackFK = attackId,
                 };
                 return board2Attack;

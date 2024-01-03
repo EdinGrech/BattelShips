@@ -90,17 +90,21 @@ namespace FrontEnd
 
                 bool[,] shipMatrix = new bool[rows, cols];
 
-                foreach (var ship in board.Ships)
+                if(board.Ships.Count > 0)
                 {
-                    foreach (var shipCoord in GetShipCoordinates(ship, grid))
+                    foreach (var ship in board.Ships)
                     {
-                        int row = shipCoord.Item1;
-                        int col = shipCoord.Item2;
+                        foreach (var shipCoord in GetShipCoordinates(ship, grid))
+                        {
+                            int row = shipCoord.Item1;
+                            int col = shipCoord.Item2;
 
-                        // Mark ship locations in the matrix
-                        shipMatrix[row, col] = true;
+                            // Mark ship locations in the matrix
+                            shipMatrix[row, col] = true;
+                        }
                     }
                 }
+
 
                 return shipMatrix;
             }
@@ -212,7 +216,9 @@ namespace FrontEnd
 
         public static void GridRenderShips(BoardData boardData, Grid grid)
         {
-            for (int i = 0; i < boardData.Ships.Count; i++)
+            if (boardData.Ships.Count > 0)
+            {
+                for (int i = 0; i < boardData.Ships.Count; i++)
             {
                 int colIndex = grid.GetColIndex(boardData.Ships[i].OrientedCoordinate.Coordinate.Col);
                 int rowIndex = grid.GetRowIndex(boardData.Ships[i].OrientedCoordinate.Coordinate.Row);
@@ -254,6 +260,7 @@ namespace FrontEnd
                         }
                     }
                 }
+            }
             }
             Console.Clear();
             Console.WriteLine($"Player {boardData.PlayerUsername}'s Ship Config Board");

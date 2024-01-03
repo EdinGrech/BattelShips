@@ -22,10 +22,11 @@ namespace DataAccess.Structures.DBStructures
             return AppContext.Boards.FirstOrDefault(board => board.id == boardId);
         }
 
-        public static void AddBoard(Board newBoard)
+        public static int AddBoard(Board newBoard)
         {
             AppContext.Boards.Add(newBoard);
             AppContext.SaveChanges();
+            return newBoard.id;
         }
     }
 }
