@@ -119,6 +119,8 @@ namespace FrontEnd
             DataAccess.Structures.StructHelpers.Attack attack;
             Console.WriteLine($"Player {attacker.username} Enter your Attack Cordiantes");
             bool isValidAttack = false;
+            
+            GridRenderAttacks(boardData, grid);
             do
             {
                 string? userInputRow = "";
@@ -168,7 +170,7 @@ namespace FrontEnd
             } while (!isValidAttack);
 
             boardData.Attacks.Add(attack);
-            boardData.hitPoints = boardData.hitPoints =- 1;
+            boardData.hitPoints = boardData.hitPoints += -1;
             return (boardData, attack);
         }
     }
