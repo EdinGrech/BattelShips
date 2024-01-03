@@ -165,12 +165,12 @@ namespace FrontEnd
                 else
                 {
                     attack.hit = AttackValidator.ShipHitDetaction(boardData,grid, attack);
+                    boardData.hitPoints = boardData.hitPoints += -1;
                     isValidAttack = true;
                 }
             } while (!isValidAttack);
 
             boardData.Attacks.Add(attack);
-            boardData.hitPoints = boardData.hitPoints += -1;
             return (boardData, attack);
         }
     }

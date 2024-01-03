@@ -26,7 +26,7 @@ namespace LogicController
                 localHitPoitns += ship.Size;
                 playerBoard1.id = SaveTranslationController.ShipOnBoardPlacementSaver(ship, playerBoard1, shipId);
             }
-            playerBoard1.hitPoints = localHitPoitns;
+            playerBoard1.hitPoints = localHitPoitns + 1;
 
             localHitPoitns = 0;
             (List<(ShipInfo, int)> shipData1, playerBoard2) = PlaceShips(playerBoard2, grid2);
@@ -35,7 +35,7 @@ namespace LogicController
                 localHitPoitns += ship.Size;
                 playerBoard2.id = SaveTranslationController.ShipOnBoardPlacementSaver(ship, playerBoard2, shipId);
             }
-            playerBoard2.hitPoints = localHitPoitns;
+            playerBoard2.hitPoints = localHitPoitns + 1;
 
             Console.WriteLine("Ship Configuration complete");
         }
