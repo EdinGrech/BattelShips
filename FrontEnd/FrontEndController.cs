@@ -23,7 +23,7 @@ namespace FrontEnd
             public int Id { get; set; }
         }
 
-        public static List<(ShipInfo, int)> PlaceShips(BoardData boardData, Grid grid)
+        public static (List<(ShipInfo, int)>, BoardData) PlaceShips(BoardData boardData, Grid grid)
         {
             List<ShipTypes> shipTypes = ShipTypesAccessor.GetAllShipTypes();
             List<ExtendedShipInfo> ShipList = new List<ExtendedShipInfo>();
@@ -39,7 +39,7 @@ namespace FrontEnd
             for (int i = 0; i < ShipList.Count; i++)
             {
                 bool shipPlacementValid = false;
-                BoardGridEngin.GridRenderShips(boardData, grid);
+                GridRenderShips(boardData, grid);
                 do
                 {
                     string? userInputRow = "";
@@ -106,11 +106,12 @@ namespace FrontEnd
                     if (!ShipPlacementValidator.ValidateShipPlacement(boardData, newShip, grid))
                     {
                         shipPlacementValid = true;
+                        boardData.Ships.Add(newShip);
                         shipInfoReturnList.Add((newShip, ShipList[i].Id));
                     }
                 } while (!shipPlacementValid);
             }
-            return shipInfoReturnList;
+            return (shipInfoReturnList, boardData);
         }
 
         public static (BoardData, DataAccess.Structures.StructHelpers.Attack) AttackShip(BoardData boardData, Player attacker, Grid grid)
