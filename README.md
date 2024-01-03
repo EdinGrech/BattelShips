@@ -71,3 +71,5 @@ The game is with 4 layers:
     - I am sure there is a few loops that could have been made more concise to save on processing time
   - Optimise State
     - If we had a clear picture from the start a Single game state could have been implemented to reduce any technical debt
+
+*PS Typo is a tribute to the chaotic state of the assignment.*
