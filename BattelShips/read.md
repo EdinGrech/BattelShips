@@ -6,6 +6,6 @@
 // Create migration script
 Add-Migration initialDBCreation
 // updating/start ORM
-Update-Database
+Update-Database initialDBCreation
 ```
 
