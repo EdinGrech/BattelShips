@@ -152,9 +152,6 @@ namespace FrontEnd
                 {
                     int attackColIndex = grid.GetColIndex(attack.coordinate.Col);
                     int attackRowIndex = grid.GetRowIndex(attack.coordinate.Row);
-
-                    bool attackColHit = false;
-                    bool attackRowHit = false;
                     
                     int colIndex = grid.GetColIndex(boardData.Ships[i].OrientedCoordinate.Coordinate.Col);
                     int rowIndex = grid.GetRowIndex(boardData.Ships[i].OrientedCoordinate.Coordinate.Row);
@@ -163,29 +160,37 @@ namespace FrontEnd
                     {
                         for (int k = 0; k < boardData.Ships[i].Size; k++)
                         {
-                            int tempColIndex = colIndex + k;
-                            if (tempColIndex == attackColIndex)
+                            if (attackRowIndex == rowIndex)
                             {
-                                attackColHit = true;
+                                int tempColIndex = colIndex + k;
+                                if (tempColIndex == attackColIndex)
+                                {
+                                    return true;
+                                }
                             }
-                            //shipMeshGrrid[rowIndex, tempColIndex] = true;
+                            else
+                            {
+                                break;
+                            }
                         }
                     }
                     if (boardData.Ships[i].OrientedCoordinate.Orientation == Orientation.Vertical)
                     {
                         for (int k = 0; k < boardData.Ships[i].Size; k++)
                         {
-                            int tempRowIndex = rowIndex + k;
-                            if (tempRowIndex == attackRowIndex)
+                            if (attackColIndex == colIndex)
                             {
-                                attackRowHit = true;
+                                int tempRowIndex = rowIndex + k;
+                                if (tempRowIndex == attackRowIndex)
+                                {
+                                    return true;
+                                }
                             }
-                            //shipMeshGrrid[tempRowIndex, colIndex] = true;
+                            else
+                            {
+                                break;
+                            }
                         }
-                    }
-                    if( attackColHit &&  attackRowHit)
-                    {
-                        return true;
                     }
                 }
                 return false;
