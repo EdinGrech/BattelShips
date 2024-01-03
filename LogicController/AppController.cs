@@ -12,6 +12,7 @@ namespace LogicController
 
         PlayerGameInit? playerGameInit = null;
         ConfigurePlayerShips? configurePlayerShips = null;
+        AttackCycleController? attackState = null;
 
         public void LockinPlayers()
         {
@@ -22,9 +23,9 @@ namespace LogicController
 
         public void ShipsConfigured()
         {
-            if (playersSelected != null)
+            if (playerGameInit != null)
             {
-                configurePlayerShips = new(playerGameInit.player1, playerGameInit.player2, playerGameInit.gameId);
+                configurePlayerShips = new(playerGameInit!.player1, playerGameInit.player2, playerGameInit.gameId);
                 shipsConfigured = true;
             }
         }
@@ -33,7 +34,12 @@ namespace LogicController
         {
             if (configurePlayerShips != null)
             {
-                var data = AttackCycleController.AttackRound(playerGameInit.player1, playerGameInit.player2, configurePlayerShips.playerBoard1, configurePlayerShips.playerBoard2);
+                if (attackState == null)
+                {
+                    attackState = new();
+                }
+
+                var data = attackState!.AttackRound(playerGameInit!.player1, playerGameInit.player2, configurePlayerShips.playerBoard1, configurePlayerShips.playerBoard2);
 
                 configurePlayerShips.playerBoard1 = data.Item1;
                 configurePlayerShips.playerBoard2 = data.Item2;
@@ -56,18 +62,21 @@ namespace LogicController
 
             playerGameInit = null;
             configurePlayerShips=null;
+            attackState = null;
         }
         public AppController() 
         {
-            options = new Option[] {
-                new Option($"Add Player details: 1 {(playersSelected ? "Disabled" : "")}", () => LockinPlayers()),
-                new Option($"Configure Ships: 2 {(shipsConfigured || !playersSelected ? "Disabled" : "")}", () => ShipsConfigured()),
-                new Option($"Launch Attack: 3 {(!shipsConfigured ? "Disabled" : "")}", () => AttackRound()),
-                new Option("Quit: 4", () => {Console.WriteLine("Quitting"); Console.ReadKey(); Environment.Exit(0); })
-            };
 
             do
             {
+                Console.Clear();
+                options = new Option[] {
+                    new Option($"Add Player details: 1 {(playersSelected ? "Disabled" : "")}", () => LockinPlayers()),
+                    new Option($"Configure Ships: 2 {(shipsConfigured || !playersSelected ? "Disabled" : "")}", () => ShipsConfigured()),
+                    new Option($"Launch Attack: 3 {(!shipsConfigured ? "Disabled" : "")}", () => AttackRound()),
+                    new Option("Quit: 4", () => {Console.WriteLine("Quitting"); Console.ReadKey(); Environment.Exit(0); })
+                };
+
                 MenuController.DisplayMenu(options, playersSelected, shipsConfigured);
             } while (true);
         }
